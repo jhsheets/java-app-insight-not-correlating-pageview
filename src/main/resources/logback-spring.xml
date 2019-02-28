@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="120 seconds">
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <!-- To override, set an environment variable or set JAVA_OPTS : -DLOG_DIR=/some/file/dir -->
+    <property name="LOG_DIR" value="${LOG_DIR:-${user.home}/azureAiTest}" />
+
+
+    <!-- AI appender -->
+    <appender name="aiAppender" class="com.microsoft.applicationinsights.logback.ApplicationInsightsAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+    </appender>
+
+
+    <!-- FILE appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/azureAiTest.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/azureAiTest.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>30</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS,EST} %-5level [%-30.30thread] %-40logger{40} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Filter our code should log at trace level -->
+    <logger name="com.example" level="TRACE"/>
+
+    <!-- Default filter for all appenders is INFO -->
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="aiAppender" />
+    </root>
+
+</configuration>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/_basic">
+<body>
+<section layout:fragment="content">
+
+    <hr/>
+
+    <p>
+        This example is to show that correlation between HTML page requests and server-side requests for the Spring Boot
+        starter project doesn't appear to be working, or at least there isn't enough documentation for me to understand
+        how to get the results to correlate.
+    </p>
+    <p>
+        Click on the File Manager link to query against your azure cloud storage account and list all the files, and
+        generate a few logging messages.
+    </p>
+    <p>
+        Then go to your Azure Application-Insights and search for the latest Metrics sent.
+        You'll see a <b>REQUEST</b> for the Spring @Controller along with a few <b>TRACE</b> logging messages.
+        Each of these will have an <i>Operation ID</i> that matches one another. When you click on one of these messages,
+        the other messages will show up in the Timeline due to them being correlated.
+    </p>
+    <p>
+        However, there will also be a <b>PAGEVIEW</b> that shows up with a different <i>Operation ID</i>, even though
+        it should belong to the same request. This doesn't appear to be the intended behavior, and I'm unable to understand why.
+    </p>
+    <p>
+        The _header.html file - included on every HTML page - should send a correlation header to the backend server when
+        it makes a request, which should be used to tie them all together.
+    </p>
+    <p>
+        The request to the server sends a <i>ai_user</i> and <i>ai_session</i> cookie to the server when the request is made.
+        However, there's no cookie for the correlation / operation_id. I'm not sure if we need to send this info with the
+        request to correlate the requests together, or if there's supposed to be enough information in the user/session to
+        correlate everything.
+    </p>
+
+</section>
+</body>
+</html>

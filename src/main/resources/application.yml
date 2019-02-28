@@ -1,0 +1,173 @@
+spring.application.name: azureAiTest
+
+# AZURE APP INSIGHT
+azure.application-insights.instrumentation-key:
+  #${APPSETTINGS_azure.application-insights.instrumentation-key}
+
+
+# CLOUD FILE STORAGE
+storage.files.cloud.login:
+storage.files.cloud.pass:
+storage.files.cloud.public.container:
+
+
+info.app.version: 0.0
+
+
+
+# =========================================
+# Azure Application Insights for SpringBoot
+# =========================================
+
+# Enable/Disable tracking. Default value: true.
+azure.application-insights.enabled: true
+
+# Enable/Disable web modules. Default value: true.
+azure.application-insights.web.enabled: true
+
+# Logging type [console, file]. Default value: console.
+azure.application-insights.logger.type: console
+# Logging level [all, trace, info, warn, error, off]. Default value: error.
+azure.application-insights.logger.level: 'ALL'
+
+# Enable/Disable QuickPulse (Live Metrics). Default value: True
+azure.application-insights.quick-pulse.enabled: true
+
+# Enable/Disable developer mode, all telemetry will be sent immediately without batching. Significantly affects performance and should be used only in developer environment. Default value: false.
+azure.application-insights.channel.in-process.developer-mode: false
+# Endpoint address, Default value: https://dc.services.visualstudio.com/v2/track.
+azure.application-insights.channel.in-process.endpoint-address: https://dc.services.visualstudio.com/v2/track
+# Maximum count of telemetries that will be batched before sending. Must be between 1 and 1000. Default value: 500.
+azure.application-insights.channel.in-process.max-telemetry-buffer-capacity: 500
+# Interval to send telemetry. Must be between 1 and 300. Default value: 5 seconds.
+azure.application-insights.channel.in-process.flush-interval-in-seconds: 5
+# Size of disk space that Application Insights can use to store telemetry in case of network outage. Must be between 1 and 1000. Default value: 10 megabytes.
+azure.application-insights.channel.in-process.max-transmission-storage-files-capacity-in-mb: 10
+# Enable/Disable throttling on sending telemetry data. Default value: true.
+azure.application-insights.channel.in-process.throttling: true
+
+#Enable and configure Local Forwarder Telemetry Channel
+azure.application-insights.channel.local-forwarder.endpoint-address:
+# Interval to send telemetry. Must be between 1 and 300. Default value: 5 seconds.
+azure.application-insights.channel.local-forwarder.flush-interval-in-seconds: 5
+## Maximum count of telemetries that will be batched before sending. Must be between 1 and 1000. Default value: 500.
+azure.application-insights.channel.local-forwarder.max-telemetry-buffer-capacity: 500
+
+
+# Percent of telemetry events that will be sent to Application Insights. Percentage must be close to 100/N where N is an integer.
+# E.g. 50 (=100/2), 33.33 (=100/3), 25 (=100/4), 20, 1 (=100/100), 0.1 (=100/1000). Default value: 100 (all telemetry events).
+azure.application-insights.telemetry-processor.sampling.percentage: 100
+# If set only telemetry of specified types will be included. Default value: all telemetries are included;
+azure.application-insights.telemetry-processor.sampling.include:
+# If set telemetry of specified type will be excluded. Default value: no telemetries are excluded.
+azure.application-insights.telemetry-processor.sampling.exclude:
+
+# Enable/Disable default telemetry modules. Default value: true.
+azure.application-insights.default-modules.ProcessPerformanceCountersModule.enabled: true
+#azure.application-insights.default-modules.JvmPerformanceCountersModule.enabled: true
+azure.application-insights.default-modules.WebRequestTrackingTelemetryModule.enabled: true
+azure.application-insights.default-modules.WebSessionTrackingTelemetryModule.enabled: true
+azure.application-insights.default-modules.WebUserTrackingTelemetryModule.enabled: true
+azure.application-insights.default-modules.WebPerformanceCounterModule.enabled: true
+azure.application-insights.default-modules.WebOperationIdTelemetryInitializer.enabled: true
+azure.application-insights.default-modules.WebOperationNameTelemetryInitializer.enabled: true
+azure.application-insights.default-modules.WebSessionTelemetryInitializer.enabled: true
+azure.application-insights.default-modules.WebUserTelemetryInitializer.enabled: true
+azure.application-insights.default-modules.WebUserAgentTelemetryInitializer.enabled: true
+
+#Collect JMX Counters
+azure.application-insights.jmx.jmx-counters[0]: java.lang:type=ClassLoading/LoadedClassCount/Current Loaded Class Count
+azure.application-insights.jmx.jmx-counters[1]: java.lang:type=Memory/HeapMemoryUsage.used/Heap Memory Used/Composite
+azure.application-insights.jmx.jmx-counters[2]: java.lang:type=Threading/ThreadCount/Thread Count
+azure.application-insights.jmx.jmx-counters[3]: java.lang:type=GarbageCollector,name=MarkSweepCompact/CollectionTime/GC MarkSweep Time
+azure.application-insights.jmx.jmx-counters[4]: java.lang:type=GarbageCollector,name=MarkSweepCompact/CollectionCount/GC MarkSweep Collections
+# where the elements separated by / have the following order:
+# 1. objectName 2. AttributeName 3. Display Name and 4. Type
+
+#Enable/Disable heartbeat module. Default value : true
+azure.application-insights.heart-beat.enabled: true
+#Default heartbeat interval is 15 minutes. Minimum heartbeat interval can be 30 seconds.
+azure.application-insights.heart-beat.heart-beat-interval: 900
+#If set of properties are specified they would be excluded from Heartbeat payload
+azure.application-insights.heart-beat.excluded-heart-beat-properties-list:
+#If set of HeartBeat providers are specified they would be excluded
+azure.application-insights.heart-beat.excluded-heart-beat-provider-list:
+
+
+# ====================
+# General config below
+# ====================
+
+# JACKSON (JacksonProperties)
+# http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#howto-customize-the-jackson-objectmapper
+# Setting this to false should cause all dates to get written as ISO8601
+spring.jackson.date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: false
+
+# MULTIPART (MultipartProperties)
+# Note that we still need to modify the server.xml when deploying to Tomcat to change it's file size limits
+spring.http.multipart.enabled: true
+spring.http.multipart.max-file-size: 2048MB
+spring.http.multipart.max-request-size: 2048MB
+spring.http.multipart.file-size-threshold: 20KB
+#spring.http.multipart.location = ${java.io.tmpdir}
+
+# EMBEDDED SERVER CONFIGURATION (ServerProperties)
+# Note that we still need to modify the server.xml when deploying to Tomcat to change the port/sessionTimeout
+server.port: 80
+# This only affects embedded mode, not when deployed to tomcat. Lets us mimic the path of the war when deployed to tomcat
+# ex: context path for : aws.war = /aws
+server.context-path: /
+# DO NOT CHANGE. Affects embedded and production mode. Causes this path to be prepended to context-path / warname
+server.servlet-path: /
+# Turn off the built-in error redirect page
+server.error.whitelabel.enabled: false
+# Set session timeout
+server.session.timeout: 1800
+# Enable session persistence across restarts (requires devtools?)
+server.session.persistent: true
+# Don't put JSESSIONID in the url
+server.session.tracking-modes: cookie
+# Security setting to help prevent XSS hijacking of cookies
+#server.session.cookie.http-only = true
+
+# SPRING RESOURCES HANDLING (ResourceProperties)
+spring.resources.add-mappings: true
+spring.resources.cache-period: 300
+spring.resources.chain.cache: true
+spring.resources.chain.html-application-cache: false
+
+# ACTUATOR PROPERTIES
+# http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready
+# MANAGEMENT HTTP SERVER (ManagementServerProperties)
+# Path that all actuator endpoint are under (ex: /spring/health, /spring/logfile, /spring/env, /spring/dump)
+management.context-path: /spring
+# ENDPOINTS (AbstractEndpoint subclasses)
+endpoints.enabled: true
+endpoints.actuator.enabled: true
+endpoints.health.enabled: true
+endpoints.health.time-to-live: 10000
+endpoints.docs.curies.enabled: true
+endpoints.docs.enabled: true
+endpoints.docs.path: /docs
+endpoints.logfile.enabled: true
+endpoints.logfile.path: /logfile
+endpoints.env.enabled: true
+endpoints.env.keys-to-sanitize: database.pass
+endpoints.configprops.enabled: true
+endpoints.configprops.keys-to-sanitize: database.pass
+endpoints.dump.enabled: true
+endpoints.info.enabled: true
+endpoints.shutdown.enabled: false
+endpoints.flyway.enabled: false
+#endpoint.trace.enabled: true
+
+# HEALTH INDICATORS
+management.health.db.enabled: true
+management.health.defaults.enabled: true
+management.health.diskspace.enabled: false
+management.health.diskspace.threshold: 0
+management.health.status.order: DOWN, OUT_OF_SERVICE, UNKNOWN, UP
+
+# REMOTE SHELL
+shell.auth:

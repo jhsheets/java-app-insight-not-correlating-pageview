@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/_basic">
+<body>
+<section layout:fragment="content">
+
+    <hr/>
+
+    <div>
+        <b>Upload File:</b>
+        <form th:action='@{/v1/files/upload}' method='post' enctype='multipart/form-data'>
+            <input type='file' name='file' size='500' style='border: 1px solid #E0E0E0; width: 500px'/>
+            <input type='submit' value='Upload File'/>
+        </form>
+    </div>
+
+    <br/><br/>
+
+    <table border='1' cellpadding='5' cellspacing='2' style='border-collapse: collapse;'>
+        <tr>
+            <td><b>File name</b></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr th:each="fileName : ${normalFiles}">
+            <td th:text="${fileName}"></td>
+            <td>
+                <form th:action='@{/html/files/delete/{fileName}(fileName=${fileName})}' method='post'>
+                    <input type='submit' value='Delete' onclick='return confirmDelete()' />
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function confirmDelete()
+        {
+            return confirm('Are you sure you want to delete the file?');
+        }
+    </script>
+
+</section>
+</body>
+</html>

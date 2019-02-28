@@ -1,0 +1,113 @@
+group 'spring.applicationinsights.test'
+
+buildscript {
+	ext {
+        spring_boot     = '1.4.4.RELEASE'
+        spring_loaded   = '1.2.5.RELEASE'
+        spring_propdeps = '0.0.7'
+
+        slf4j           = '1.7.7'
+        logback         = '1.1.3'
+       
+        az_appins       = '2.3.1'
+        az_appins_spring= '1.1.2'
+        az_store        = '8.0.0'
+
+        thyme_extras    = '2.1.2.RELEASE'
+
+        jquery          = '2.1.4'
+        jsonview        = '0.2.0'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "http://repo.spring.io/plugins-release" }
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot"
+		// hot swap classes w/o restart
+		classpath "org.springframework:springloaded:$spring_loaded"
+	}
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+	// prevent this transitive dependency so libs use jcl-over-slf4j instead
+	compile.exclude group: 'commons-logging'
+}
+
+dependencies {
+
+    // logging libs
+    compile "org.slf4j:slf4j-api:$slf4j"
+    compile "org.slf4j:jcl-over-slf4j:$slf4j"
+    compile "ch.qos.logback:logback-classic:$logback"
+    compile "ch.qos.logback:logback-core:$logback"
+
+	// microsoft azure libs
+	compile "com.microsoft.azure:applicationinsights-logging-logback:$az_appins"
+    compile "com.microsoft.azure:applicationinsights-spring-boot-starter:$az_appins_spring"
+	compile "com.microsoft.azure:azure-storage:$az_store"
+
+	// NOTE: the version for spring libs is determined by spring-boot-gradle-plugin version
+	compile 'org.springframework.boot:spring-boot-starter'
+	compile 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	compile 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // javascript libs
+    compile "org.webjars:jquery:$jquery"
+    compile "org.webjars:jquery-jsonview:$jsonview"
+
+    compileOnly "org.springframework.boot:spring-boot-devtools"
+
+	// Test libs
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'org.springframework.ws:spring-ws-test'
+	testCompile 'org.springframework:spring-test'
+	testCompile 'org.springframework.security:spring-security-test'
+}
+
+
+idea {
+    project {
+        vcs = 'Mercurial'
+        languageLevel = sourceCompatibility
+    }
+    module {
+		jdkName = sourceCompatibility
+
+		// Make intellij compile classes in the same dir as gradle, so springloaded hotswap works
+		inheritOutputDirs = false
+
+        downloadJavadoc = true // defaults to false
+        downloadSources = true
+
+        // Ignore gradle and ide folders
+        excludeDirs += file(".gradle")
+        excludeDirs += file(".idea")
+        excludeDirs += file(".settings")
+
+        // Ignore gradle output files
+        ["classes", "docs", "dependency-cache", "libs", "reports", "resources", "test-results", "tmp"].each {
+            excludeDirs << file("$buildDir/$it")
+        }
+    }
+}
+
+
+// Use an embedded version of gradle in the project.
+// Will be auto-downloaded if it doesn't exist, and user has gradle/ide that understands this command.
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.6'
+}

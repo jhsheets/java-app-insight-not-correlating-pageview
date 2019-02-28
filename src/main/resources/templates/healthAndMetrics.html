@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/_basic">
+<head>
+    <script th:src="@{/webjars/jquery/2.1.4/jquery.js}"></script>
+    <script th:src="@{/webjars/jquery-jsonview/0.2.0/jquery.jsonview.js}"></script>
+    <link rel='stylesheet' th:href="@{/webjars/jquery-jsonview/0.2.0/jquery.jsonview.css}" />
+</head>
+<body>
+<section layout:fragment="content">
+
+    <hr/>
+
+    <h3>Select Option:</h3>
+    <ul class="nav nav-tabs" id="healthAndMetricsTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="metricsTab" data-toggle="tab"
+               href="#metricsLnk" role="tab" aria-controls="home" aria-selected="true">Metrics</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="healthCheckTab" data-toggle="tab"
+               href="#healthCheckLnk" role="tab" aria-controls="profile" aria-selected="false">Health Checks</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="threadDumpTab" data-toggle="tab"
+               href="#threadDumpLnk" role="tab" aria-controls="contact" aria-selected="false">Thread Dump</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="envVarsTab" data-toggle="tab"
+               href="#envVarsLnk" role="tab" aria-controls="contact" aria-selected="false">Env Vars</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="infoTab" data-toggle="tab"
+               href="#infoLnk" role="tab" aria-controls="contact" aria-selected="false">Info</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="configTab" data-toggle="tab"
+               href="#configLnk" role="tab" aria-controls="contact" aria-selected="false">Config</a>
+        </li>
+    </ul>
+
+
+    <h3>Output:</h3>
+    <div class="tab-content" id="healthAndMetricsTabContent"></div>
+
+    <script>
+        $(document).ready(function() {
+            metricsLnk();
+        });
+
+        function metricsLnk() {
+            $.get('../spring/metrics', function (resp) {
+                $("#healthAndMetricsTabContent").JSONView(resp, {collapsed: false});
+            });
+        }
+
+        function healthCheckLnk(event) {
+            $.get('../spring/health', function (resp) {
+                $("#healthAndMetricsTabContent").JSONView(resp, {collapsed: false});
+            });
+        }
+
+        function threadDumpLnk(event) {
+            $.get('../spring/dump', function (resp) {
+                $("#healthAndMetricsTabContent").JSONView( { threads: resp }, {collapsed:false} );
+            });
+        }
+
+        function envVarsLnk(event) {
+            $.get('../spring/env', function(resp) {
+                $("#healthAndMetricsTabContent").JSONView( resp, {collapsed:true} );
+            });
+        }
+
+        function infoLnk(event) {
+            $.get('../spring/info', function (resp) {
+                $("#healthAndMetricsTabContent").JSONView( resp, {collapsed:false} );
+            });
+        }
+
+        function configLnk(event) {
+            $.get('../spring/configprops', function (resp) {
+                $("#healthAndMetricsTabContent").JSONView( resp, {collapsed:true} );
+            });
+        }
+
+        function downloadLogs(event) {
+            window.location='../spring/logfile';
+        }
+
+        $('#metricsTab').on('click', metricsLnk );
+        $('#healthCheckTab').on('click', healthCheckLnk );
+        $('#threadDumpTab').on('click', threadDumpLnk );
+        $('#envVarsTab').on('click', envVarsLnk );
+        $('#infoTab').on('click', infoLnk );
+        $('#configTab').on('click', configLnk );
+
+    </script>
+
+</section>
+</body>
+</html>

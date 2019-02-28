@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+
+    <title>Azure AI Example</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!--/*
+    If we set the azure application insights key in our configuration, include a microsoft-supplied function to azureDependency our web requests
+    https://github.com/Microsoft/ApplicationInsights-JS/blob/master/API-reference.md#config
+    */-->
+    <script type="text/javascript" th:src="@{/ai.js}"></script>
+    <script type="text/javascript" th:inline="javascript" th:if="${@environment.getProperty('azure.application-insights.instrumentation-key')}">
+    /*<![CDATA[*/
+        var appInsights=window.appInsights||function(a){
+            function b(a){c[a]=function(){var b=arguments;c.queue.push(function(){c[a].apply(c,b)})}}var c={config:a},d=document,e=window;setTimeout(function(){var b=d.createElement("script");b.src=a.url||"https://az416426.vo.msecnd.net/scripts/a/ai.0.js",d.getElementsByTagName("script")[0].parentNode.appendChild(b)});try{c.cookie=d.cookie}catch(a){}c.queue=[];for(var f=["Event","Exception","Metric","PageView","Trace","Dependency"];f.length;)b("track"+f.pop());if(b("setAuthenticatedUserContext"),b("clearAuthenticatedUserContext"),b("startTrackEvent"),b("stopTrackEvent"),b("startTrackPage"),b("stopTrackPage"),b("flush"),!a.disableExceptionTracking){f="onerror",b("_"+f);var g=e[f];e[f]=function(a,b,d,e,h){var i=g&&g(a,b,d,e,h);return!0!==i&&c["_"+f](a,b,d,e,h),i}}return c
+        }({
+            disableCorrelationHeaders: false,
+            enableDebug: true,
+            verboseLogging: true,
+            instrumentationKey: /*[[${@environment.getProperty('azure.application-insights.instrumentation-key')}]]*/null,
+        });
+
+        window.appInsights=appInsights,appInsights.queue&&0===appInsights.queue.length&&appInsights.trackPageView();
+    /*]]>*/
+    </script>
+
+</head>
+</html>

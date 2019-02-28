@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+
+<!-- Side nav menu that collapses when window is small -->
+<nav th:fragment="sideMenu" id="sidebar">
+
+    Navigation:
+    <ul class="bg-dark text-white collapse md-collapse" id="navbarSupportedContent">
+        <li>
+            <a class="list-group-item" th:href='@{/html/welcome}'>Home</a>
+        </li>
+
+        <li>
+            <a class="list-group-item" th:href='@{/html/files}'>File Manager</a>
+        </li>
+
+        <li>
+            <a class="list-group-item" th:href='@{/html/healthAndMetrics}'>Spring Health and Metrics</a>
+        </li>
+    </ul>
+
+</nav>
+
+</body>
+</html>
